@@ -22,7 +22,7 @@ namespace NZWalks.API.Controllers
         }
 
         // CREATE walk
-        // POST
+        // POST: http://localhost:{port}/api/walks
         [HttpPost]
         [ValidateModel]
         public async Task<IActionResult> Create([FromBody] AddWalkRequestDto addWalkRequestDto)
@@ -64,7 +64,8 @@ namespace NZWalks.API.Controllers
         }
 
         // UPDATE Walk by ID
-        // PUT
+        // PUT http://localhost:{port}/api/walks
+
         [HttpPut]
         [Route("{id:Guid}")]
         [ValidateModel]

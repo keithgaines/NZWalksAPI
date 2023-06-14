@@ -5,6 +5,9 @@ using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
+using System;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 
 namespace NZWalks.API.Controllers
 {
@@ -23,9 +26,9 @@ namespace NZWalks.API.Controllers
         }
 
         // Get all regions
-        // GET : localhost:portnumber/api/regions
+        // GET: localhost:portnumber/api/regions
         [HttpGet]
-        [Authorize(Roles = "Reader")]
+        [Authorize(Roles = "Reader,Writer")] 
         public async Task<IActionResult> GetAll()
         {
             // Get Data from DB - Domain Models
@@ -39,8 +42,10 @@ namespace NZWalks.API.Controllers
         }
 
         // GET SINGLE REGION
+        // GET: localhost:portnumber/api/regions/{id}
+
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "Reader")]
+        [Authorize(Roles = "Reader,Writer")] 
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var regionDomain = await regionRepository.GetByIDAsync(id);
@@ -55,7 +60,7 @@ namespace NZWalks.API.Controllers
             return Ok(regionDto);
         }
 
-        // POST to create new region
+        // POST to create a new region
         // POST: https://localhost:portnumber/api/regions
         [HttpPost]
         [ValidateModel]
@@ -93,6 +98,8 @@ namespace NZWalks.API.Controllers
         }
 
         // Delete Region
+        // DELETE: https://localhost:portnumber/api/regions/{id}
+
         [HttpDelete("{id:guid}")]
         [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteAsync(Guid id)
