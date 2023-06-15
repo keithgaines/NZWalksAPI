@@ -4,6 +4,8 @@ using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
+using Microsoft.AspNetCore.Authorization;
+
 
 namespace NZWalks.API.Controllers
 {

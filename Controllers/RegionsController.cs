@@ -1,7 +1,6 @@
 ﻿using AutoMapper;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using NZWalks.API.CustomActionFilters;
 using NZWalks.API.Models.Domain;
 using NZWalks.API.Models.DTO;
 using NZWalks.API.Repositories;
@@ -28,7 +27,7 @@ namespace NZWalks.API.Controllers
         // Get all regions
         // GET: localhost:portnumber/api/regions
         [HttpGet]
-        [Authorize(Roles = "Reader,Writer")] 
+        [Authorize(Roles = "Reader,Writer")]
         public async Task<IActionResult> GetAll()
         {
             // Get Data from DB - Domain Models
@@ -43,9 +42,8 @@ namespace NZWalks.API.Controllers
 
         // GET SINGLE REGION
         // GET: localhost:portnumber/api/regions/{id}
-
         [HttpGet("{id:guid}")]
-        [Authorize(Roles = "Reader,Writer")] 
+        [Authorize(Roles = "Reader,Writer")]
         public async Task<IActionResult> GetByIdAsync(Guid id)
         {
             var regionDomain = await regionRepository.GetByIDAsync(id);
@@ -63,23 +61,22 @@ namespace NZWalks.API.Controllers
         // POST to create a new region
         // POST: https://localhost:portnumber/api/regions
         [HttpPost]
-        [ValidateModel]
         [Authorize(Roles = "Writer")]
         public async Task<IActionResult> CreateAsync([FromBody] AddRegionRequestDto addRegionRequestDto)
         {
             var regionDomainModel = mapper.Map<Region>(addRegionRequestDto);
 
-            regionDomainModel = await regionRepository.CreateAsync(regionDomainModel);
+            var createdRegion = await regionRepository.CreateAsync(regionDomainModel);
 
-            var regionDto = mapper.Map<RegionDTO>(regionDomainModel);
+            var regionDto = mapper.Map<RegionDTO>(createdRegion);
 
-            return CreatedAtAction(nameof(GetByIdAsync), new { id = regionDomainModel.Id }, regionDto);
+            return Ok(regionDto); // Manually return a 200 OK status code
         }
+
 
         // Update Region
         // PUT: https://localhost:portnumber/api/regions/{id}
         [HttpPut("{id:guid}")]
-        [ValidateModel]
         [Authorize(Roles = "Writer")]
         public async Task<IActionResult> UpdateAsync(Guid id, [FromBody] UpdateRegionRequestDto updateRegionRequestDto)
         {
@@ -99,7 +96,6 @@ namespace NZWalks.API.Controllers
 
         // Delete Region
         // DELETE: https://localhost:portnumber/api/regions/{id}
-
         [HttpDelete("{id:guid}")]
         [Authorize(Roles = "Writer")]
         public async Task<IActionResult> DeleteAsync(Guid id)
